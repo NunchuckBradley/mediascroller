@@ -11,3 +11,7 @@ includes
 npm install
 node node.js
 ```
+
+update file locations to point to on node.js `config.dir` variable and `database_file`
+also update in public `scroller.js` the static file locations of the image location. 
+for this example in public will be folder called `memes` which will hold all images and `config.dir` will scan that file.
