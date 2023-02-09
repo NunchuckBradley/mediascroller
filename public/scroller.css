@@ -1,0 +1,5 @@
+img, video {
+	max-height: 550px;
+	max-width: 550px;
+	border: dashed black 4px;
+}
