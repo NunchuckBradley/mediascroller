@@ -18,12 +18,12 @@ app.listen(HTTP_PORT, () => {
     console.log("Server is listening on port " + HTTP_PORT);
 });
 
-const database_file = './meme.db';
+const database_file = './database.db';
 
 var config = {
     reload: false,
     length: 30,
-    dir: '/home/martin/files/this is meme'
+    dir: '/home/martin/files/mediascroller'
 };
 
 // watch for new file changes
@@ -113,7 +113,7 @@ const db = new sqlite3.Database(database_file, (err) => {
     }
 });
 
-app.get("/api/memes", (req, res, next) => {
+app.get("/api/content", (req, res, next) => {
     // res.status(200).json(config.files);
     db.all("SELECT rowid, * FROM files order by rowid desc", (err, rows) => {
         if (err) {
@@ -124,7 +124,7 @@ app.get("/api/memes", (req, res, next) => {
       });
 });
 
-app.get("/api/memes/:id", (req, res, next) => {
+app.get("/api/content/:id", (req, res, next) => {
     db.all(`SELECT rowid, * FROM files where rowid < ?  order by rowid desc LIMIT ?`, [req.params.id, config.length], (err, rows) => {
         if (err) {
           res.status(400).json({"error":err.message});
@@ -139,7 +139,7 @@ app.get("/", (req, res) => {
 });
 
 
-// app logger 😈
+// basic logger
 app.post('/logger', function(req, res) {
     var user = {
         agent: req.header('user-agent'), // User Agent we get from headers
