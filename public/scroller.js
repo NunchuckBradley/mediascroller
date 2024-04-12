@@ -1,12 +1,12 @@
-var memes = [];
-var meme_buffer = [];
+var content = [];
+var content_buffer = [];
 var bottomReached = true;
 
 var infiniteScrollOffset = 200;
 
 function sortBy(selector) {
-	// var complete = memes.concat(meme_buffer);
-	memes.sort(function(a, b) {
+	// var complete = content.concat(content_buffer);
+	content.sort(function(a, b) {
 		switch(selector) {
 		case "mdatea":
 			return a.mdate - b.mdate;
@@ -19,19 +19,19 @@ function sortBy(selector) {
        
     });
     $('#scroller').html('');
-    loadMemes(memes);
+    loadcontent(content);
 }
 
-function loadMemes(list) {
+function loadcontent(list) {
 	list.forEach( function(item, index) {
 		if (item.type.split('/')[0] == 'image') {
 			// if image
-			$('#scroller').append($('<img>',{'data-src':'/memes/'+item.name}));
+			$('#scroller').append($('<img>',{'data-src':'/content/'+item.name}));
 		}
 		if (item.type.split('/')[0] == 'video') {
 			// if video
 			var video = $('<video />', {
-			    'data-src': '/memes/'+item.name,
+			    'data-src': '/content/'+item.name,
 			    'controls': true
 			});
 			$('#scroller').append(video);
@@ -40,15 +40,15 @@ function loadMemes(list) {
 	$('#scroller').append('<hr>');
 }
 
-function ajaxMemes(id) {
+function ajaxcontent(id) {
 	if (bottomReached == true) {
 		$.ajax({
-			url: '/api/memes/'+id,
+			url: '/api/content/'+id,
 			type: 'GET',
 			success: function(data) {
-				meme_buffer = data;
-				memes = memes.concat(meme_buffer);
-				loadMemes(meme_buffer);
+				content_buffer = data;
+				content = content.concat(content_buffer);
+				loadcontent(content_buffer);
 				bottomReached = false;
 			},
 			error: function(error) {
@@ -64,21 +64,21 @@ $(window).scroll(function () {
 		// get meme with lowest id and forward it to ajax
 		if (bottomReached == false) {
 			bottomReached = true;
-			min = memes.reduce(function(previousValue, currentValue, index, array) {
+			min = content.reduce(function(previousValue, currentValue, index, array) {
 		    	return (currentValue.rowid < previousValue.rowid ? currentValue : previousValue);
 			});
-			ajaxMemes(min.rowid);
+			ajaxcontent(min.rowid);
 		}
 	}
 });
 
 window.onload = function() {
-	// initial grab of memes
-	ajaxMemes(9999999);
+	// initial grab of content
+	ajaxcontent(9999999);
 	setInterval(mediaDataToSrc, 2000);
 }
 
-// Logger to log you chipmunks 😈
+// Basic logger
 $(document).ready(function(){
 	if (!Cookies.get('logger')) {
 		$.post('/logger', { width: screen.width, height: screen.height });
